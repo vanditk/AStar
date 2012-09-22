@@ -74,7 +74,7 @@ public class SearchUSA {
 
 
     }
-
+/*
     // implementation of Depth first search.
     public static LinkedList<Node> depthFirstSearch(String src, String dest, StateSpace stateSpace) throws Exception {
 
@@ -106,7 +106,7 @@ public class SearchUSA {
             return solution;
         
     }
-
+*/
     public static void main(String[] args) {
 
         String searchType = args[0].trim();
@@ -125,7 +125,7 @@ public class SearchUSA {
             stateSpace.initializeStateSpace(roads,allNodes, root);
             LinkedList<Node> solution = new LinkedList<Node>();
             if (searchType.equalsIgnoreCase("greedy")) {
-                solution = depthFirstSearch(srcCityName, destCityName, stateSpace);
+                solution = greedySearch(srcCityName, destCityName, stateSpace);
             } else if (searchType.equalsIgnoreCase("astar")) {
                 solution = aStarSearch(srcCityName, destCityName, stateSpace);
             } else {
@@ -156,6 +156,10 @@ public class SearchUSA {
     private static Map<String, Node> initializeNodes() {
         throw new UnsupportedOperationException("Not yet implemented");
         
+    }
+
+    private static LinkedList<Node> greedySearch(String srcCityName, String destCityName, StateSpace stateSpace) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
 

@@ -80,10 +80,12 @@ public class StateSpace {
      //city(City1, Lat1, Long1),
      //city(City2, Lat2, Long2),
      //Value is sqrt((69.5 * (Lat1 - Lat2)) ^ 2 + (69.5 * cos((Lat1 + Lat2)/360 * pi) * (Long1 - Long2)) ^ 2)
-    public double heuristic(Node City1,Node City2)
+    public double calculateHeuristic(Node city1,Node city2)
     {
+        double lat1 = city1.getLatitude(),lat2=city2.getLatitude();
+        double long1 = city1.getLongitude(),long2=city2.getLongitude();
         double value = 0.0;
-        
+        Math.sqrt(((69.5*(lat1-lat2)*69.5*(lat1-lat2))) + (69.5*Math.cos((lat1+lat2)/360 * Math.PI)*(long1 - long2)*(long1 - long2)));
         return value;
     }
     
