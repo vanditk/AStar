@@ -18,14 +18,14 @@ public class StateSpace {
     {
         return expandedStates;
     }
-    public void initializeStateSpace(ArrayList<Road> roadLinks,Set<Node> allNodesx, Node rootx) throws Exception {
+    public void initializeStateSpace(ArrayList<Road> roadLinks,Map<String,Node> allNodesx, Node rootx) throws Exception {
 
         links = roadLinks;
         root = rootx;
-        convertToMap(allNodesx);
+        allNodes = allNodesx;
     }
 
-    private void convertToMap(Set<Node> allNodesx) {
+    private void convertToMap(Iterable allNodesx) {
         Iterator<Node> it = allNodesx.iterator();
         //convert to a hashmap to enable getting nodes by city name -- reduce memory print
         while (it.hasNext())

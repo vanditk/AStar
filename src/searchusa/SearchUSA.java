@@ -113,15 +113,16 @@ public class SearchUSA {
         String srcCityName = args[1].trim();
         String destCityName = args[2].trim();
         
-
+        
         ArrayList<Road> roads = initializePaths();
+        Map<String,Node> allNodes = initializeNodes();
         StateSpace stateSpace = new StateSpace();
         try {
             //modify to get node from statespace rather than creating new nodes
             Node root = stateSpace.getNodeForCity(srcCityName);
             //modify upto here
             root.setParent(root);
-            stateSpace.initializeStateSpace(roads, root);
+            stateSpace.initializeStateSpace(roads,allNodes, root);
             LinkedList<Node> solution = new LinkedList<Node>();
             if (searchType.equalsIgnoreCase("greedy")) {
                 solution = depthFirstSearch(srcCityName, destCityName, stateSpace);
@@ -150,6 +151,11 @@ public class SearchUSA {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    private static Map<String, Node> initializeNodes() {
+        throw new UnsupportedOperationException("Not yet implemented");
+        
     }
 
 
