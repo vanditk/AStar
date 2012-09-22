@@ -5,6 +5,8 @@
 package searchusa;
 
 import Generics.AStarPath;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.*;
 
  /**
@@ -20,29 +22,21 @@ public class SearchUSA {
 
     public static ArrayList<Road> initializePaths() {
         ArrayList<Road> roads = new ArrayList<Road>();
-        roads.add(new Road("oradea", "zerind", 71));
-        roads.add(new Road("zerind", "arad", 75));
-        roads.add(new Road("arad", "timisoara", 118));
-        roads.add(new Road("timisoara", "lugoj", 111));
-        roads.add(new Road("lugoj", "mehadia", 70));
-        roads.add(new Road("dobreta", "mehadia", 75));
-        roads.add(new Road("oradea", "sibiu", 151));
-        roads.add(new Road("arad", "sibiu", 140));
-        roads.add(new Road("dobreta", "craiova", 120));
-        roads.add(new Road("sibiu", "rimnicu_vilcea", 80));
-        roads.add(new Road("sibiu", "fagaras", 99));
-        roads.add(new Road("rimnicu_vilcea", "craiova", 146));
-        roads.add(new Road("pitesti", "craiova", 138));
-        roads.add(new Road("rimnicu_vilcea", "pitesti", 97));
-        roads.add(new Road("bucharest", "pitesti", 101));
-        roads.add(new Road("bucharest", "fagaras", 211));
-        roads.add(new Road("bucharest", "giurgiu", 90));
-        roads.add(new Road("bucharest", "urziceni", 85));
-        roads.add(new Road("vaslui", "urziceni", 142));
-        roads.add(new Road("hirsova", "urziceni", 98));
-        roads.add(new Road("hirsova", "eforie", 86));
-        roads.add(new Road("vaslui", "iasi", 92));
-        roads.add(new Road("neamt", "iasi", 87));
+        try
+        {
+        BufferedReader br = new BufferedReader(new FileReader("/home/vandit/NetBeansProjects/SearchUSA/src/searchusa/roads.txt"));
+        String rawLine= br.readLine();
+        while(rawLine!=null)
+        {
+              
+              String []parts= rawLine.split(",");
+              roads.add(new Road(parts[0].trim(),parts[1].trim(),new Integer(parts[2].trim())));
+              rawLine= br.readLine();
+        }
+        }catch(Exception e)
+        {
+        e.printStackTrace();
+        }
         return roads;
     }
 
@@ -121,13 +115,13 @@ public class SearchUSA {
         ArrayList<Road> roads = initializePaths();
         Map<String,Node> allNodes = initializeNodes();
         StateSpace stateSpace = new StateSpace();
+        
         try {
-            //modify to get node from statespace rather than creating new nodes
+            
+            stateSpace.initializeStateSpace(roads,allNodes, srcCityName,destCityName);
             Node root = stateSpace.getNodeForCity(srcCityName);
             Node goal =stateSpace.getNodeForCity(destCityName);
-            //modify upto here
             root.setParent(root);
-            stateSpace.initializeStateSpace(roads,allNodes, root,goal);
             LinkedList<Node> solution = new LinkedList<Node>();
             if (searchType.equalsIgnoreCase("greedy")) {
                 solution = greedySearch(srcCityName, destCityName, stateSpace);
@@ -159,8 +153,26 @@ public class SearchUSA {
     }
 
     private static Map<String, Node> initializeNodes() {
-        throw new UnsupportedOperationException("Not yet implemented");
         
+        Map<String,Node> cityMap = new HashMap<String, Node>();
+        //cityMap.put("albanyGA",new Node("albanyGA",        31.58,  84.17));
+        
+        try
+        {
+        BufferedReader br = new BufferedReader(new FileReader("/home/vandit/NetBeansProjects/SearchUSA/src/searchusa/cities.txt"));
+        String rawLine= br.readLine();
+        while(rawLine!=null)
+        {
+              
+              String []parts= rawLine.split(",");
+              cityMap.put(parts[0].trim() , new Node(parts[0].trim(), new Double(parts[1].trim()),new Double(parts[2].trim()))   );
+              rawLine= br.readLine();
+        }
+        }catch(Exception e)
+        {
+        e.printStackTrace();
+        }
+        return cityMap;
     }
 
     private static LinkedList<Node> greedySearch(String srcCityName, String destCityName, StateSpace stateSpace) {

@@ -19,11 +19,13 @@ public class StateSpace {
     {
         return expandedStates;
     }
-    public void initializeStateSpace(ArrayList<Road> roadLinks,Map<String,Node> allNodesx, Node rootx,Node goal) throws Exception {
+    public void initializeStateSpace(ArrayList<Road> roadLinks,Map<String,Node> allNodesx, String rootx,String goalx) throws Exception {
 
-        links = roadLinks;
-        root = rootx;
         allNodes = allNodesx;
+        links = roadLinks;
+        root = allNodes.get(rootx);
+        goal = allNodes.get(goalx);
+        
     }
 
     private void convertToMap(Iterable allNodesx) {

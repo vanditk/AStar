@@ -19,6 +19,11 @@ public class Node implements Comparable<Node>{
         value = valuex;
         
     }
+     public Node(String valuex,double latitudex,double longitudex) {
+        value = valuex;
+        latitude = latitudex;
+        longitude= longitudex;
+    }
     
     @Override
     public int hashCode()
