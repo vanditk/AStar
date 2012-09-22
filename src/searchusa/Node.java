@@ -13,7 +13,7 @@ public class Node implements Comparable<Node>{
     private ArrayList<Node> children = new ArrayList<Node>();
     private String value;
     private double latitude,longitude;
-    
+    private double distanceFromParent = 0;
 
     public Node(String valuex) {
         value = valuex;
@@ -116,6 +116,20 @@ public class Node implements Comparable<Node>{
      */
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    /**
+     * @return the distanceFromParent
+     */
+    public double getDistanceFromParent() {
+        return distanceFromParent;
+    }
+
+    /**
+     * @param distanceFromParent the distanceFromParent to set
+     */
+    public void setDistanceFromParent(double distanceFromParent) {
+        this.distanceFromParent = distanceFromParent;
     }
 
  

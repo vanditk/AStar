@@ -4,12 +4,13 @@
  */
 package searchusa;
 
+import Generics.AStarPath;
 import java.util.*;
 
 
 public class StateSpace {
 
-    private Node root;
+    private Node root,goal;
     private ArrayList<Road> links;
     private Map<String,Node> allNodes = new HashMap<String,Node>();
     private HashSet<Node> expandedStates = new HashSet<Node>();
@@ -18,7 +19,7 @@ public class StateSpace {
     {
         return expandedStates;
     }
-    public void initializeStateSpace(ArrayList<Road> roadLinks,Map<String,Node> allNodesx, Node rootx) throws Exception {
+    public void initializeStateSpace(ArrayList<Road> roadLinks,Map<String,Node> allNodesx, Node rootx,Node goal) throws Exception {
 
         links = roadLinks;
         root = rootx;
@@ -36,7 +37,11 @@ public class StateSpace {
     }
     public Node getNodeForCity(String city)
     {
-        return allNodes.get(city);
+        Node cityNode = allNodes.get(city);
+        Node newCity = new Node(city);
+        newCity.setLatitude(cityNode.getLatitude());
+        newCity.setLongitude(cityNode.getLongitude());
+        return newCity;
     }
     // If a given node is already expanded, it returns a empty list (because this means we have entered into a loop
     // and backtracking is needed.)
@@ -52,12 +57,14 @@ public class StateSpace {
             if (road.containsCity(n.getValue())) {
                 try {
                     //modify to look up for nodes.
-                    Node newCity = getNodeForCity(n.getValue());
+                    Node newCity = getNodeForCity(road.getConnectingCity(n.getValue()));
                     //modify to look up for nodes.
+                    
                     if (!newCity.equals(n) && !newCity.equals(n.getParent())) {
                         newCity.setParent(n);
                         ArrayList<Node> children = n.getChildren();
                         if (!children.contains(n)) {
+                            newCity.setDistanceFromParent(road.getDistance());
                             children.add(newCity);
                         }
                         n.setChildren(children);
@@ -84,17 +91,20 @@ public class StateSpace {
     {
         double lat1 = city1.getLatitude(),lat2=city2.getLatitude();
         double long1 = city1.getLongitude(),long2=city2.getLongitude();
-        double value = 0.0;
-        Math.sqrt(((69.5*(lat1-lat2)*69.5*(lat1-lat2))) + (69.5*Math.cos((lat1+lat2)/360 * Math.PI)*(long1 - long2)*(long1 - long2)));
+        double value;
+        value = Math.sqrt(((69.5*(lat1-lat2)*69.5*(lat1-lat2))) + (69.5*Math.cos((lat1+lat2)/360 * Math.PI)*(long1 - long2)*(long1 - long2)));
         return value;
     }
     
-    public ArrayList<LinkedList<Node>> generateNewPaths(LinkedList<Node> currentPath) {
+    public ArrayList<AStarPath> generateNewPaths(AStarPath currentPath) {
         Node n = currentPath.getLast();
-        ArrayList<LinkedList<Node>> newPaths = new ArrayList<LinkedList<Node>>();
+        ArrayList<AStarPath> newPaths = new ArrayList<AStarPath>();
         try {
             for (Node child : expandNode(n)) {
-                LinkedList<Node> newPath = new LinkedList<Node>();
+                double heuristic = calculateHeuristic(child, goal);
+                AStarPath newPath = new AStarPath(heuristic);
+                //set path length
+                newPath.setPathLength(currentPath.getPathLength() + child.getDistanceFromParent());
                 newPath.addAll(currentPath);
                 newPath.add(child);
                 newPaths.add(newPath);

@@ -4,6 +4,7 @@
  */
 package searchusa;
 
+import Generics.AStarPath;
 import java.util.*;
 
  /**
@@ -46,22 +47,25 @@ public class SearchUSA {
     }
 
     public static LinkedList<Node> aStarSearch(String src, String dest, StateSpace stateSpace) throws Exception {
-        LinkedList<Node> solution = new LinkedList<Node>();
-        LinkedList<Node> start = new LinkedList<Node>();
-        PriorityQueue<LinkedList<Node>> solutionQueue = new PriorityQueue<LinkedList<Node>>();
+        LinkedList<Node> solution = new AStarPath(0);
         
-        Node root = stateSpace.getRoot();
+        PriorityQueue<AStarPath> solutionQueue = new PriorityQueue<AStarPath>();
+        
+        Node root = stateSpace.getNodeForCity(src);
+        Node goal = stateSpace.getNodeForCity(dest);
+        root.setDistanceFromParent(0);
+        AStarPath start = new AStarPath(stateSpace.calculateHeuristic(root, goal));
         start.add(root);
         solutionQueue.add(start);
         while (solutionQueue.size() > 0) {
-            LinkedList<Node> currentPath = solutionQueue.remove();
+            AStarPath currentPath = solutionQueue.remove();
             if (currentPath.getLast().getValue().equals(dest)) {
                 solution = currentPath;
                 //solution found ! Break !!
                 break;
             } else {
-                ArrayList<LinkedList<Node>> newPaths = stateSpace.generateNewPaths(currentPath);
-                for (LinkedList<Node> path : newPaths) {
+                ArrayList<AStarPath> newPaths = stateSpace.generateNewPaths(currentPath);
+                for (AStarPath path : newPaths) {
                     
                     solutionQueue.add(path);
                 }
@@ -120,9 +124,10 @@ public class SearchUSA {
         try {
             //modify to get node from statespace rather than creating new nodes
             Node root = stateSpace.getNodeForCity(srcCityName);
+            Node goal =stateSpace.getNodeForCity(destCityName);
             //modify upto here
             root.setParent(root);
-            stateSpace.initializeStateSpace(roads,allNodes, root);
+            stateSpace.initializeStateSpace(roads,allNodes, root,goal);
             LinkedList<Node> solution = new LinkedList<Node>();
             if (searchType.equalsIgnoreCase("greedy")) {
                 solution = greedySearch(srcCityName, destCityName, stateSpace);
