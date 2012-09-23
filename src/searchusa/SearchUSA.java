@@ -120,7 +120,11 @@ public class SearchUSA {
             
             stateSpace.initializeStateSpace(roads,allNodes, srcCityName,destCityName);
             Node root = stateSpace.getNodeForCity(srcCityName);
-            Node goal =stateSpace.getNodeForCity(destCityName);
+            Node goal = stateSpace.getNodeForCity(destCityName);
+            if(root == null || goal == null)
+            {
+                throw new Exception("Please enter valid source and destination city names");
+            }
             root.setParent(root);
             LinkedList<Node> solution = new LinkedList<Node>();
             if (searchType.equalsIgnoreCase("greedy")) {
@@ -148,7 +152,7 @@ public class SearchUSA {
                 System.out.println("Number of nodes Expanded: " + stateSpace.getExpandedStates().size() + "\n Expanded Nodes : " + stateSpace.getExpandedStates());
             }
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex);
         }
     }
 

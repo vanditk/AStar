@@ -40,10 +40,19 @@ public class StateSpace {
     public Node getNodeForCity(String city)
     {
         Node cityNode = allNodes.get(city);
+        
+        if(cityNode != null)
+        {
         Node newCity = new Node(city);
         newCity.setLatitude(cityNode.getLatitude());
         newCity.setLongitude(cityNode.getLongitude());
         return newCity;
+        }
+        else
+        {
+            return null;
+        }
+        
     }
     // If a given node is already expanded, it returns a empty list (because this means we have entered into a loop
     // and backtracking is needed.)
