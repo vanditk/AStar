@@ -34,7 +34,7 @@ public class SearchUSA {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("total number of paths : "+roads.size());
+        System.out.println("total number of paths : " + roads.size());
         return roads;
     }
 
@@ -46,7 +46,7 @@ public class SearchUSA {
         Node root = stateSpace.getNodeForCity(src);
         Node goal = stateSpace.getNodeForCity(dest);
         root.setDistanceFromParent(0);
-        
+
         AStarPath start = new AStarPath(stateSpace.calculateHeuristic(root, goal));
         start.add(root);
         solutionQueue.add(start);
@@ -63,13 +63,12 @@ public class SearchUSA {
                     Node lastNode = path.getLast();
                     boolean shorterPathFound = false;
                     if (stateSpace.getExpandedStates().contains(lastNode)) {
-                        
+
                         Object[] tempSolutions = solutionQueue.toArray();
-                        AStarPath[] solutions = new  AStarPath[tempSolutions.length];
-                        for(int i=0;i<tempSolutions.length;i++)
-                        {
-                            
-                            solutions[i] = (AStarPath)tempSolutions[i];
+                        AStarPath[] solutions = new AStarPath[tempSolutions.length];
+                        for (int i = 0; i < tempSolutions.length; i++) {
+
+                            solutions[i] = (AStarPath) tempSolutions[i];
                         }
                         for (int i = 0; i < solutions.length; i++) {
                             if (solutions[i].contains(lastNode)) {   //found some path through which node was expanded
@@ -80,12 +79,11 @@ public class SearchUSA {
                                         solutions[i].remove(0);
                                     }
                                     solutions[i].getFirst().setParent(lastNode);
-                                    
+
                                     solutions[i].addAll(0, path);
-                                    
+
                                 } else {
                                     //older path was shorter.. don't save currentPath to the PriorityQueue
-                                    
                                 }
                                 solutionQueue = new PriorityQueue<AStarPath>();
                                 solutionQueue.addAll(Arrays.asList(solutions));
@@ -95,8 +93,7 @@ public class SearchUSA {
                     }
 
                     //logic ends
-                    if(!shorterPathFound)
-                    {
+                    if (!shorterPathFound) {
                         solutionQueue.add(path);
                     }
                 }
@@ -160,10 +157,14 @@ public class SearchUSA {
             //LinkedList<Node> solution = new LinkedList<Node>();
             AStarPath solution = null;
             if (searchType.equalsIgnoreCase("greedy")) {
-                //solution = greedySearch(srcCityName, destCityName, stateSpace);
+                solution = greedySearch(srcCityName, destCityName, stateSpace);
             } else if (searchType.equalsIgnoreCase("astar")) {
                 solution = aStarSearch(srcCityName, destCityName, stateSpace);
-            } else {
+            }else if(searchType.equalsIgnoreCase("dynamic")){
+                solution = dynamicProgrammingSearch(srcCityName, destCityName, stateSpace);
+            } 
+            
+            else {
                 throw new Exception("Invalid Search Type. Enter either BFS or DFS");
             }
 
@@ -206,12 +207,110 @@ public class SearchUSA {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("total number of cities : "+cityMap.size());
+        System.out.println("total number of cities : " + cityMap.size());
         return cityMap;
-        
+
     }
 
-    private static LinkedList<Node> greedySearch(String srcCityName, String destCityName, StateSpace stateSpace) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private static AStarPath greedySearch(String srcCityName, String destCityName, StateSpace stateSpace) {
+
+        AStarPath solution = new AStarPath(0);
+
+        int initialCapacity = 20;
+        GreedyComparator gcomparator = new GreedyComparator();
+        PriorityQueue<AStarPath> solutionQueue = new PriorityQueue<AStarPath>(initialCapacity,gcomparator );
+
+        Node root = stateSpace.getNodeForCity(srcCityName);
+        Node goal = stateSpace.getNodeForCity(destCityName);
+        root.setDistanceFromParent(0);
+
+        AStarPath start = new AStarPath(stateSpace.calculateHeuristic(root, goal));
+        start.add(root);
+        solutionQueue.add(start);
+        while (solutionQueue.size() > 0) {
+            AStarPath currentPath = solutionQueue.remove();
+            if (currentPath.getLast().getValue().equals(destCityName)) {
+                solution = currentPath;
+                //solution found ! Break !!
+                break;
+            } else {
+                ArrayList<AStarPath> newPaths = stateSpace.generateNewPaths(currentPath);
+                for (AStarPath path : newPaths) {
+                    solutionQueue.add(path);
+                    }
+                }
+
+            }
+
+        return solution;
+    }
+
+    private static AStarPath dynamicProgrammingSearch(String srcCityName, String destCityName, StateSpace stateSpace) {
+        AStarPath solution = new AStarPath(0);
+
+        PriorityQueue<AStarPath> solutionQueue = new PriorityQueue<AStarPath>();
+
+        Node root = stateSpace.getNodeForCity(srcCityName);
+        Node goal = stateSpace.getNodeForCity(destCityName);
+        root.setDistanceFromParent(0);
+
+        AStarPath start = new AStarPath(stateSpace.calculateHeuristic(root, goal));
+        start.add(root);
+        solutionQueue.add(start);
+        while (solutionQueue.size() > 0) {
+            AStarPath currentPath = solutionQueue.remove();
+            if (currentPath.getLast().getValue().equals(destCityName)) {
+                solution = currentPath;
+                //solution found ! Break !!
+                break;
+            } else {
+                ArrayList<AStarPath> newPaths = stateSpace.generateNewPaths(currentPath);
+                for (AStarPath path : newPaths) {
+                    //logic to prune paths
+                    Node lastNode = path.getLast();
+                    boolean shorterPathFound = false;
+                    if (stateSpace.getExpandedStates().contains(lastNode)) {
+
+                        Object[] tempSolutions = solutionQueue.toArray();
+                        AStarPath[] solutions = new AStarPath[tempSolutions.length];
+                        for (int i = 0; i < tempSolutions.length; i++) {
+
+                            solutions[i] = (AStarPath) tempSolutions[i];
+                        }
+                        for (int i = 0; i < solutions.length; i++) {
+                            if (solutions[i].contains(lastNode)) {   //found some path through which node was expanded
+                                int indexOfNode = solutions[i].indexOf(lastNode);
+                                if (solutions[i].get(indexOfNode).getDistanceFromRoot() > path.getPathLength()) {
+                                    //currentpath is shortest path. merge paths
+                                    for (int k = 0; k < indexOfNode; k++) {
+                                        solutions[i].remove(0);
+                                    }
+                                    solutions[i].getFirst().setParent(lastNode);
+
+                                    solutions[i].addAll(0, path);
+
+                                } else {
+                                    //older path was shorter.. don't save currentPath to the PriorityQueue
+                                }
+                                solutionQueue = new PriorityQueue<AStarPath>();
+                                solutionQueue.addAll(Arrays.asList(solutions));
+                            }
+                        }
+
+                    }
+
+                    //logic ends
+                    if (!shorterPathFound) {
+                        solutionQueue.add(path);
+                    }
+                }
+
+            }
+
+        }
+
+        return solution;
+
+
     }
 }
