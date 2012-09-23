@@ -248,13 +248,14 @@ public class SearchUSA {
     private static AStarPath dynamicProgrammingSearch(String srcCityName, String destCityName, StateSpace stateSpace) {
         AStarPath solution = new AStarPath(0);
 
-        PriorityQueue<AStarPath> solutionQueue = new PriorityQueue<AStarPath>();
+        DynamicComparator dc = new DynamicComparator();
+        PriorityQueue<AStarPath> solutionQueue = new PriorityQueue<AStarPath>(20,dc);
 
         Node root = stateSpace.getNodeForCity(srcCityName);
         Node goal = stateSpace.getNodeForCity(destCityName);
         root.setDistanceFromParent(0);
-
-        AStarPath start = new AStarPath(stateSpace.calculateHeuristic(root, goal));
+        //heuristic wont get used in Dynamic programming.
+        AStarPath start = new AStarPath(0);
         start.add(root);
         solutionQueue.add(start);
         while (solutionQueue.size() > 0) {
