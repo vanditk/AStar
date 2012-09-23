@@ -14,7 +14,7 @@ public class Node implements Comparable<Node>{
     private String value;
     private double latitude,longitude;
     private double distanceFromParent = 0;
-
+    private double distanceFromRoot = 0;
     public Node(String valuex) {
         value = valuex;
         
@@ -135,6 +135,21 @@ public class Node implements Comparable<Node>{
      */
     public void setDistanceFromParent(double distanceFromParent) {
         this.distanceFromParent = distanceFromParent;
+    }
+
+
+    /**
+     * @return the distanceFromRoot
+     */
+    public double getDistanceFromRoot() {
+        return distanceFromRoot;
+    }
+
+    /**
+     * @param distanceFromRoot the distanceFromRoot to set
+     */
+    public void setDistanceFromRoot(double distanceFromRoot) {
+        this.distanceFromRoot = distanceFromRoot;
     }
 
  

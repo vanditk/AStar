@@ -10,6 +10,7 @@ import java.util.*;
 
 public class StateSpace {
 
+    
     private Node root,goal;
     private ArrayList<Road> links;
     private Map<String,Node> allNodes = new HashMap<String,Node>();
@@ -25,7 +26,7 @@ public class StateSpace {
         links = roadLinks;
         root = allNodes.get(rootx);
         goal = allNodes.get(goalx);
-        
+       
     }
 
     private void convertToMap(Iterable allNodesx) {
@@ -63,6 +64,7 @@ public class StateSpace {
             //throw new Exception("tried to re-expand node : "+n);
             return new ArrayList<Node>();
         }
+        
         expandedStates.add(n);
         for (Road road : links) {
             if (road.containsCity(n.getValue())) {
@@ -88,9 +90,9 @@ public class StateSpace {
         }
 
          ArrayList<Node> children = n.getChildren();
-         Collections.sort(children);
+         //Collections.sort(children);
          
-         n.setChildren(children);
+         //n.setChildren(children);
          return children;
          
     }
@@ -109,15 +111,20 @@ public class StateSpace {
     
     public ArrayList<AStarPath> generateNewPaths(AStarPath currentPath) {
         Node n = currentPath.getLast();
+        
+        
         ArrayList<AStarPath> newPaths = new ArrayList<AStarPath>();
         try {
             for (Node child : expandNode(n)) {
                 double heuristic = calculateHeuristic(child, goal);
                 AStarPath newPath = new AStarPath(heuristic);
+                
                 //set path length
+                child.setDistanceFromRoot(currentPath.getPathLength() + child.getDistanceFromParent());
                 newPath.setPathLength(currentPath.getPathLength() + child.getDistanceFromParent());
                 newPath.addAll(currentPath);
                 newPath.add(child);
+                
                 newPaths.add(newPath);
             }
         } catch (Exception ex) {

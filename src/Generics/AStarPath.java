@@ -16,7 +16,7 @@ public class AStarPath extends LinkedList<Node> implements Comparable {
     
     private double pathLength =0;
     private double heuristicDistanceFromLastNode = 0.0;
-
+    private int pathId = 0;
     /**
      * @return the heuristicDistanceFromLastNode
      */
@@ -55,7 +55,7 @@ public class AStarPath extends LinkedList<Node> implements Comparable {
     public int compareTo(Object o) {
         AStarPath path = (AStarPath)o;
         Double weightCurrentPath = pathLength + heuristicDistanceFromLastNode;
-        Double weightOtherPath  = pathLength + heuristicDistanceFromLastNode;
+        Double weightOtherPath  = path.getPathLength() + path.getHeuristicDistanceFromLastNode();
         return  weightCurrentPath.compareTo(weightOtherPath);
     }
     
@@ -69,6 +69,20 @@ public class AStarPath extends LinkedList<Node> implements Comparable {
             pathLengthx += it.next().getDistanceFromParent();
         }
         return pathLengthx;
+    }
+
+    /**
+     * @return the pathId
+     */
+    public int getPathId() {
+        return pathId;
+    }
+
+    /**
+     * @param pathId the pathId to set
+     */
+    public void setPathId(int pathId) {
+        this.pathId = pathId;
     }
 
    
