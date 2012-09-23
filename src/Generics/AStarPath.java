@@ -4,6 +4,7 @@
  */
 package Generics;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import searchusa.Node;
 
@@ -56,6 +57,18 @@ public class AStarPath extends LinkedList<Node> implements Comparable {
         Double weightCurrentPath = pathLength + heuristicDistanceFromLastNode;
         Double weightOtherPath  = pathLength + heuristicDistanceFromLastNode;
         return  weightCurrentPath.compareTo(weightOtherPath);
+    }
+    
+    public double calculatePathLength()
+    {
+        double pathLengthx = 0;
+        
+        Iterator<Node> it = this.iterator();
+        while(it.hasNext())
+        {
+            pathLengthx += it.next().getDistanceFromParent();
+        }
+        return pathLengthx;
     }
 
    

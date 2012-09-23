@@ -40,8 +40,8 @@ public class SearchUSA {
         return roads;
     }
 
-    public static LinkedList<Node> aStarSearch(String src, String dest, StateSpace stateSpace) throws Exception {
-        LinkedList<Node> solution = new AStarPath(0);
+    public static AStarPath aStarSearch(String src, String dest, StateSpace stateSpace) throws Exception {
+        AStarPath solution = new AStarPath(0);
         
         PriorityQueue<AStarPath> solutionQueue = new PriorityQueue<AStarPath>();
         
@@ -126,9 +126,10 @@ public class SearchUSA {
                 throw new Exception("Please enter valid source and destination city names");
             }
             root.setParent(root);
-            LinkedList<Node> solution = new LinkedList<Node>();
+            //LinkedList<Node> solution = new LinkedList<Node>();
+            AStarPath solution = null;
             if (searchType.equalsIgnoreCase("greedy")) {
-                solution = greedySearch(srcCityName, destCityName, stateSpace);
+                //solution = greedySearch(srcCityName, destCityName, stateSpace);
             } else if (searchType.equalsIgnoreCase("astar")) {
                 solution = aStarSearch(srcCityName, destCityName, stateSpace);
             } else {
@@ -150,6 +151,7 @@ public class SearchUSA {
                 }
 
                 System.out.println("Number of nodes Expanded: " + stateSpace.getExpandedStates().size() + "\n Expanded Nodes : " + stateSpace.getExpandedStates());
+                System.out.println("Total path distance:"+solution.calculatePathLength());
             }
         } catch (Exception ex) {
             System.out.println(ex);
