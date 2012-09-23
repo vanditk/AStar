@@ -87,7 +87,7 @@ public class Node implements Comparable<Node>{
 
     @Override
     public String toString() {
-        return "Node: " + value;
+        return value;
     }
 
     @Override
