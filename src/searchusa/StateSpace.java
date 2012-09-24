@@ -14,9 +14,9 @@ public class StateSpace {
     private Node root,goal;
     private ArrayList<Road> links;
     private Map<String,Node> allNodes = new HashMap<String,Node>();
-    private HashSet<Node> expandedStates = new HashSet<Node>();
+    private ArrayList<Node> expandedStates = new ArrayList<Node>();
 
-    public HashSet<Node> getExpandedStates()
+    public ArrayList<Node> getExpandedStates()
     {
         return expandedStates;
     }

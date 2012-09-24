@@ -293,7 +293,7 @@ public class SearchUSA {
                                 } else {
                                     //older path was shorter.. don't save currentPath to the PriorityQueue
                                 }
-                                solutionQueue = new PriorityQueue<AStarPath>();
+                                solutionQueue = new PriorityQueue<AStarPath>(20,dc);
                                 solutionQueue.addAll(Arrays.asList(solutions));
                             }
                         }
