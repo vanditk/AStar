@@ -105,7 +105,7 @@ public class StateSpace {
         double lat1 = city1.getLatitude(),lat2=city2.getLatitude();
         double long1 = city1.getLongitude(),long2=city2.getLongitude();
         double value;
-        value = Math.sqrt(((69.5*(lat1-lat2)*69.5*(lat1-lat2))) + (69.5*Math.cos((lat1+lat2)/360 * Math.PI)*(long1 - long2)*(long1 - long2)));
+        value = Math.sqrt(((69.5*(lat1-lat2)*69.5*(lat1-lat2))) + Math.pow((69.5*Math.cos((lat1+lat2)/360 * Math.PI)*(long1 - long2)),2));
         return value;
     }
     

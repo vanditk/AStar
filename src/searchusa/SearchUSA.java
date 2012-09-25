@@ -80,7 +80,7 @@ public class SearchUSA {
                                         solutions[i].remove(0);
                                     }
                                     solutions[i].getFirst().setParent(lastNode);
-
+                                    solutions[i].setPathLength(solutions[i].calculatePathLength());
                                     solutions[i].addAll(0, path);
 
                                 } else {

@@ -54,8 +54,10 @@ public class AStarPath extends LinkedList<Node> implements Comparable {
     @Override
     public int compareTo(Object o) {
         AStarPath path = (AStarPath)o;
-        Double weightCurrentPath = pathLength + heuristicDistanceFromLastNode;
-        Double weightOtherPath  = path.getPathLength() + path.getHeuristicDistanceFromLastNode();
+        //Double weightCurrentPath = pathLength + heuristicDistanceFromLastNode;
+        //Double weightOtherPath  = path.getPathLength() + path.getHeuristicDistanceFromLastNode();
+        Double weightCurrentPath = calculatePathLength() + heuristicDistanceFromLastNode;
+        Double weightOtherPath  = path.calculatePathLength() + path.getHeuristicDistanceFromLastNode();
         return  weightCurrentPath.compareTo(weightOtherPath);
     }
     
