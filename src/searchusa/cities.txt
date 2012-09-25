@@ -106,7 +106,7 @@ uk1,51.30,0.00
 uk2,51.30,0.00
 vancouver,49.25,123.10
 washington,38.91,77.01
-westPalmBeach,38.91,77.01
+westPalmBeach,26.71,80.05
 wichita,37.69,97.34
 winnipeg,49.90,97.13
 yuma,32.69,114.62
